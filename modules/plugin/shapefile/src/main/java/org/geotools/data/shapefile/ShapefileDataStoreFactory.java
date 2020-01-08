@@ -23,11 +23,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.logging.Logger;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataUtilities;
@@ -40,12 +36,12 @@ import org.geotools.util.KVP;
 import org.geotools.util.URLs;
 import org.geotools.util.logging.Logging;
 
-/** Builds instances of the shapefile data store */
+/** Builds instances of the shapefile data store 生成shapefile数据存储的实例 */
 public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
 
     static final Logger LOGGER = Logging.getLogger(ShapefileDataStoreFactory.class);
 
-    /** url to the .shp file. */
+    /** url to the .shp file. 指向.shp文件的url。 */
     public static final Param URLP =
             new Param(
                     "url", URL.class, "url to a .shp file", true, null, new KVP(Param.EXT, "shp"));
@@ -57,7 +53,7 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
                     URI.class,
                     "uri to a the namespace",
                     false,
-                    null, // not required
+                    null,
                     new KVP(Param.LEVEL, "advanced"));
 
     /** Optional - enable/disable the use of memory-mapped io */
@@ -114,10 +110,12 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
                  *
                  * @see org.geotools.data.DataStoreFactorySpi.Param#parse(java.lang.String)
                  */
+                @Override
                 public Object parse(String text) throws IOException {
                     return Charset.forName(text);
                 }
 
+                @Override
                 public String text(Object value) {
                     return ((Charset) value).name();
                 }
@@ -137,7 +135,7 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
                             Param.LEVEL,
                             "advanced",
                             Param.OPTIONS,
-                            Arrays.asList(new String[] {"shape-ng", "shape", "index"})));
+                            Arrays.asList("shape-ng", "shape", "index")));
     /** Optional - timezone to decode dates from the DBF file */
     public static final Param DBFTIMEZONE =
             new Param(
@@ -148,10 +146,12 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
                     TimeZone.getDefault(),
                     new KVP(Param.LEVEL, "advanced")) {
 
+                @Override
                 public Object parse(String text) throws IOException {
                     return TimeZone.getTimeZone(text);
                 }
 
+                @Override
                 public String text(Object value) {
                     return ((TimeZone) value).getID();
                 }
@@ -167,37 +167,50 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
                     true,
                     new KVP(Param.LEVEL, "advanced"));
 
+    @Override
     public String getDisplayName() {
         return "Shapefile";
     }
 
+    @Override
     public String getDescription() {
         return "ESRI(tm) Shapefiles (*.shp)";
     }
 
+    @Override
     public Param[] getParametersInfo() {
-        return new Param[] {
-            URLP,
-            NAMESPACEP,
-            ENABLE_SPATIAL_INDEX,
-            CREATE_SPATIAL_INDEX,
-            DBFCHARSET,
-            DBFTIMEZONE,
-            MEMORY_MAPPED,
-            CACHE_MEMORY_MAPS,
-            FILE_TYPE,
-            FSTYPE
-        };
+
+        LinkedHashMap<String, Param> map = new LinkedHashMap<>();
+        setupParameters(map);
+        return map.values().toArray(new Param[map.size()]);
     }
 
+    protected void setupParameters(Map<String, Param> parameters) {
+        {
+            parameters.put(URLP.key, URLP);
+            parameters.put(NAMESPACEP.key, NAMESPACEP);
+            parameters.put(ENABLE_SPATIAL_INDEX.key, ENABLE_SPATIAL_INDEX);
+            parameters.put(CREATE_SPATIAL_INDEX.key, CREATE_SPATIAL_INDEX);
+            parameters.put(DBFCHARSET.key, DBFCHARSET);
+            parameters.put(DBFTIMEZONE.key, DBFTIMEZONE);
+            parameters.put(MEMORY_MAPPED.key, MEMORY_MAPPED);
+            parameters.put(CACHE_MEMORY_MAPS.key, CACHE_MEMORY_MAPS);
+            parameters.put(FILE_TYPE.key, FILE_TYPE);
+            parameters.put(FSTYPE.key, FSTYPE);
+        }
+    }
+
+    @Override
     public boolean isAvailable() {
         return true;
     }
 
+    @Override
     public Map<Key, ?> getImplementationHints() {
         return Collections.EMPTY_MAP;
     }
 
+    @Override
     public DataStore createDataStore(Map<String, Serializable> params) throws IOException {
         URL url = lookup(URLP, params, URL.class);
         Boolean isMemoryMapped = lookup(MEMORY_MAPPED, params, Boolean.class);
@@ -221,9 +234,9 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
             ShpFiles shpFiles = new ShpFiles(url);
 
             boolean isLocal = shpFiles.isLocal();
-            boolean useMemoryMappedBuffer = isLocal && isMemoryMapped.booleanValue();
-            boolean enableIndex = isEnableSpatialIndex.booleanValue() && isLocal;
-            boolean createIndex = isCreateSpatialIndex.booleanValue() && enableIndex;
+            boolean useMemoryMappedBuffer = isLocal && isMemoryMapped;
+            boolean enableIndex = isEnableSpatialIndex && isLocal;
+            boolean createIndex = isCreateSpatialIndex && enableIndex;
 
             // build the store
             ShapefileDataStore store = new ShapefileDataStore(url);
@@ -240,6 +253,7 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
         }
     }
 
+    @Override
     public DataStore createNewDataStore(Map<String, Serializable> params) throws IOException {
         return createDataStore(params);
     }
@@ -268,7 +282,9 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
     @Override
     public boolean canProcess(Map params) {
         if (!DataUtilities.canProcess(params, getParametersInfo())) {
-            return false; // fail basic param check
+            // fail basic param check
+            // 基本参数检查失败
+            return false;
         }
         try {
             URL url = (URL) URLP.lookUp(params);
@@ -308,6 +324,7 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
         }
     }
 
+    @Override
     public boolean canProcess(URL f) {
         return f != null && f.getFile().toUpperCase().endsWith("SHP");
     }
@@ -328,6 +345,7 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
             this.originalParams = originalParams;
         }
 
+        @Override
         public DataStore getDataStore(File file) throws IOException {
             final URL url = URLs.fileToUrl(file);
             if (shpFactory.canProcess(url)) {
@@ -367,7 +385,8 @@ public class ShapefileDataStoreFactory implements FileDataStoreFactorySpi {
     @Override
     public String getTypeName(URL url) throws IOException {
         DataStore ds = createDataStore(url);
-        String[] names = ds.getTypeNames(); // should be exactly one
+        // should be exactly one
+        String[] names = ds.getTypeNames();
         ds.dispose();
         return ((names == null || names.length == 0) ? null : names[0]);
     }

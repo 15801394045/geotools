@@ -1,2 +1,4 @@
 org.geotools.data.shapefile.ShapefileDataStoreFactory
 org.geotools.data.shapefile.ShapefileDirectoryFactory
+org.geotools.data.shapefile.UploadShapefileDataStoreFactory
+

@@ -346,14 +346,20 @@ public interface DataAccessFactory extends Factory {
 
         /**
          * Provides support for text representations
+         * 提供对文本表示的支持
          *
          * @param key Key used to file this Param in the Parameter Map for createDataStore
+         *            用于在createDataStore的参数映射中归档此参数的键
          * @param type Class type intended for this Param
+         *             用于此参数的类类型
          * @param description User description of Param (40 chars or less)
+         *                    参数的用户描述（40个字符或更少）
          * @param required <code>true</code> is param is required
+         *                 <code>true</code>是否需要参数
          * @param sample Sample value as an example for user input
+         *               示例值作为用户输入
          * @param metadata metadata information, preferably keyed by known identifiers like {@link
-         *     Parameter#IS_PASSWORD}
+         *     Parameter#IS_PASSWORD} 元数据信息，最好由诸如{@link Parameter#IS_PASSWORD}之类的已知标识符键入
          */
         public Param(
                 String key,

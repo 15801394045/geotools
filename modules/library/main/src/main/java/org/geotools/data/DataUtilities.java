@@ -46,6 +46,7 @@ import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.geotools.data.DataAccessFactory.Param;
 import org.geotools.data.collection.CollectionFeatureSource;
 import org.geotools.data.collection.ListFeatureCollection;
@@ -175,7 +176,7 @@ import org.opengis.util.ProgressListener;
  *   <li>{@link #duplicate(Object)} used for deep copy of feature data
  *   <li>
  * </ul>
- *
+ * <p>
  * And a grab bag of helpful utility methods for those implementing a DataStore:
  *
  * <ul>
@@ -190,10 +191,14 @@ import org.opengis.util.ProgressListener;
  * @author Jody Garnett, Refractions Research
  */
 public class DataUtilities {
-    /** Typemap used by {@link #createType(String, String)} methods */
+    /**
+     * Typemap used by {@link #createType(String, String)} methods
+     */
     static Map<String, Class> typeMap = new HashMap<String, Class>();
 
-    /** Reverse type map used by {@link #encodeType(FeatureType)} */
+    /**
+     * Reverse type map used by {@link #encodeType(FeatureType)}
+     */
     static Map<Class, String> typeEncode = new HashMap<Class, String>();
 
     static FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
@@ -319,12 +324,16 @@ public class DataUtilities {
         return propertyNames;
     }
 
-    /** Traverses the filter and returns any encountered property names. */
+    /**
+     * Traverses the filter and returns any encountered property names.
+     */
     public static String[] attributeNames(Filter filter) {
         return attributeNames(filter, null);
     }
 
-    /** Traverses the filter and returns any encountered property names. */
+    /**
+     * Traverses the filter and returns any encountered property names.
+     */
     public static Set<PropertyName> propertyNames(Filter filter) {
         return propertyNames(filter, null);
     }
@@ -363,12 +372,16 @@ public class DataUtilities {
         return propertyNames;
     }
 
-    /** Traverses the expression and returns any encountered property names. */
+    /**
+     * Traverses the expression and returns any encountered property names.
+     */
     public static String[] attributeNames(Expression expression) {
         return attributeNames(expression, null);
     }
 
-    /** Traverses the expression and returns any encountered property names. */
+    /**
+     * Traverses the expression and returns any encountered property names.
+     */
     public static Set<PropertyName> propertyNames(Expression expression) {
         return propertyNames(expression, null);
     }
@@ -436,8 +449,8 @@ public class DataUtilities {
      * <p>Please note this method will not result in a stable sort if used in a {@link Comparator}
      * as -1 is used to indicate incompatiblity (rather than simply "before").
      *
-     * @param typeA FeatureType being compared
-     * @param typeB FeatureType being compared against
+     * @param typeA  FeatureType being compared
+     * @param typeB  FeatureType being compared against
      * @param strict flag controlling the comparison check
      */
     protected static int compareInternal(
@@ -506,11 +519,11 @@ public class DataUtilities {
      * <p>This method checks the descriptors name and class binding to see if the values have any
      * chance of being compatible.
      *
-     * @param a descriptor to compare
-     * @param b descriptor to compare
+     * @param a      descriptor to compare
+     * @param b      descriptor to compare
      * @param strict if true both descriptor name and class binding is checked otherwise a more
-     *     loose form o compatibility is assumed where equality is determined by descriptor name
-     *     only
+     *               loose form o compatibility is assumed where equality is determined by descriptor name
+     *               only
      * @return true if compatibility comparison succeeds
      */
     public static boolean isMatch(AttributeDescriptor a, AttributeDescriptor b, boolean strict) {
@@ -551,7 +564,7 @@ public class DataUtilities {
      * copy each attribute.
      *
      * @param featureType FeatureType requested
-     * @param feature Origional Feature from DataStore
+     * @param feature     Origional Feature from DataStore
      * @return An instance of featureType based on feature
      * @throws IllegalAttributeException If opperation could not be performed
      */
@@ -588,14 +601,14 @@ public class DataUtilities {
      *   <li>duplicate is false: the attributes are simply reordered and are actually the same
      *       instances as those in the origional feature
      * </ul>
-     *
+     * <p>
      * In the future this method may simply return a "wrapper" when duplicate is false.
      *
      * <p>
      *
      * @param featureType
      * @param feature
-     * @param duplicate True to perform {@link #duplicate(Object)} on each attribute
+     * @param duplicate   True to perform {@link #duplicate(Object)} on each attribute
      * @return
      * @throws IllegalAttributeException
      */
@@ -631,7 +644,7 @@ public class DataUtilities {
      *   <li>JTS Geometry objects are cloned
      *   <li>Arrays and the Collection classes are duplicated element by element
      * </ul>
-     *
+     * <p>
      * This function is used recusively for (in order to handle complext features) no attempt is
      * made to detect cycles at this time so your milage may vary.
      *
@@ -798,7 +811,7 @@ public class DataUtilities {
      * @param providedValues
      * @return newly created feature
      * @throws ArrayIndexOutOfBoundsException If the number of provided values does not match the
-     *     featureType
+     *                                        featureType
      */
     public static SimpleFeature template(SimpleFeatureType featureType, Object[] providedValues) {
         return SimpleFeatureBuilder.build(
@@ -814,7 +827,7 @@ public class DataUtilities {
      * @param providedValues provided attributes
      * @return newly created feature
      * @throws ArrayIndexOutOfBoundsException If the number of provided values does not match the
-     *     featureType
+     *                                        featureType
      */
     public static SimpleFeature template(
             SimpleFeatureType featureType, String featureID, Object[] providedValues) {
@@ -829,7 +842,7 @@ public class DataUtilities {
      * @param values
      * @return set of default values
      * @throws ArrayIndexOutOfBoundsException If the number of provided values does not match the
-     *     featureType
+     *                                        featureType
      */
     public static Object[] defaultValues(SimpleFeatureType featureType, Object[] values) {
         if (values == null) {
@@ -921,34 +934,34 @@ public class DataUtilities {
             return point;
         }
         if (type == MultiPoint.class) {
-            return fac.createMultiPoint(new Point[] {point});
+            return fac.createMultiPoint(new Point[]{point});
         }
         LineString lineString =
-                fac.createLineString(new Coordinate[] {new Coordinate(0, 0), new Coordinate(0, 1)});
+                fac.createLineString(new Coordinate[]{new Coordinate(0, 0), new Coordinate(0, 1)});
         if (type == LineString.class) {
             return lineString;
         }
         LinearRing linearRing =
                 fac.createLinearRing(
-                        new Coordinate[] {
-                            new Coordinate(0, 0),
-                            new Coordinate(0, 1),
-                            new Coordinate(1, 1),
-                            new Coordinate(1, 0),
-                            new Coordinate(0, 0)
+                        new Coordinate[]{
+                                new Coordinate(0, 0),
+                                new Coordinate(0, 1),
+                                new Coordinate(1, 1),
+                                new Coordinate(1, 0),
+                                new Coordinate(0, 0)
                         });
         if (type == LinearRing.class) {
             return linearRing;
         }
         if (type == MultiLineString.class) {
-            return fac.createMultiLineString(new LineString[] {lineString});
+            return fac.createMultiLineString(new LineString[]{lineString});
         }
         Polygon polygon = fac.createPolygon(linearRing, new LinearRing[0]);
         if (type == Polygon.class) {
             return polygon;
         }
         if (type == MultiPolygon.class) {
-            return fac.createMultiPolygon(new Polygon[] {polygon});
+            return fac.createMultiPolygon(new Polygon[]{polygon});
         }
 
         if (type.isArray()) {
@@ -1037,9 +1050,9 @@ public class DataUtilities {
      *
      * @param collection Feature collection providing content
      * @return FeatureSource used to wrap the content
-     * @throws NullPointerException if any of the features are null
+     * @throws NullPointerException     if any of the features are null
      * @throws IllegalArgumentException If the provided collection is inconsistent (perhaps
-     *     containing mixed feature types)
+     *                                  containing mixed feature types)
      */
     public static SimpleFeatureSource source(
             final FeatureCollection<SimpleFeatureType, SimpleFeature> collection) {
@@ -1075,7 +1088,7 @@ public class DataUtilities {
      * @param store the data store
      * @param query the query
      * @return the constrained view
-     * @throws IOException if the data store cannot be accessed
+     * @throws IOException     if the data store cannot be accessed
      * @throws SchemaException if the query is incompatible with the store's contents
      */
     public static SimpleFeatureSource createView(final DataStore store, final Query query)
@@ -1087,9 +1100,9 @@ public class DataUtilities {
      * Return a 'view' of the given {@code FeatureSource} constrained by a {@code Query}.
      *
      * @param source feature source
-     * @param query the query
+     * @param query  the query
      * @return the constrained view
-     * @throws IOException if the data store cannot be accessed
+     * @throws IOException     if the data store cannot be accessed
      * @throws SchemaException if the query is incompatible with the store's contents
      */
     public static SimpleFeatureSource createView(
@@ -1110,6 +1123,7 @@ public class DataUtilities {
         SimpleFeatureSource source = source(features);
         return dataStore(source);
     }
+
     /**
      * Adapt a single FeatureSource as a read-only DataStore.
      *
@@ -1121,6 +1135,7 @@ public class DataUtilities {
     public static DataStore dataStore(SimpleFeatureSource source) {
         return new DataStoreAdaptor(source);
     }
+
     /**
      * Adapt a collection to a reader for use with FeatureStore.setFeatures( reader ).
      *
@@ -1226,6 +1241,7 @@ public class DataUtilities {
     //
     // Conversion (or casting) from general feature model to simple feature model
     //
+
     /**
      * A safe cast to SimpleFeatureCollection; that will introduce a wrapper if it has to.
      *
@@ -1241,7 +1257,7 @@ public class DataUtilities {
      * </ul>
      *
      * @param featureCollection will be returned as a SimpleFeatureCollection and wrapped only if
-     *     needed
+     *                          needed
      * @return SimpleFeatureCollection
      * @since 2.7
      */
@@ -1322,7 +1338,7 @@ public class DataUtilities {
      *
      * @param featureType FeatureType being converted
      * @return SimpleFeatureType created by stripping any complicated content from the provided
-     *     featureType
+     * featureType
      * @throws DataSourceException
      */
     public static SimpleFeatureType simple(final FeatureType featureType)
@@ -1343,8 +1359,8 @@ public class DataUtilities {
         // doing a hardcode property name black list
         final List<String> ignoreList =
                 Arrays.asList(
-                        new String[] {
-                            "location", "metaDataProperty", "description", "name", "boundedBy"
+                        new String[]{
+                                "location", "metaDataProperty", "description", "name", "boundedBy"
                         });
 
         for (Iterator<PropertyDescriptor> it = attributes.iterator(); it.hasNext(); ) {
@@ -1428,6 +1444,7 @@ public class DataUtilities {
     //
     // FeatureCollection Utility Methods
     //
+
     /**
      * Copies the provided features into a List.
      *
@@ -1447,11 +1464,12 @@ public class DataUtilities {
         }
         return list;
     }
+
     /**
      * Copies the provided fetaures into a List.
      *
      * @param featureCollection
-     * @param maxFeatures Maximum number of features to load
+     * @param maxFeatures       Maximum number of features to load
      * @return List of features copied into memory
      */
     public static <F extends Feature> List<F> list(
@@ -1468,12 +1486,13 @@ public class DataUtilities {
         }
         return list;
     }
+
     /**
      * Iteator wrapped around the provided FeatureIterator, implementing {@link Closeable}.
      *
-     * @see #close(Iterator)
      * @param featureIterator
      * @return Iterator wrapped around provided FeatureIterator, implements Closeable
+     * @see #close(Iterator)
      */
     public static <F extends Feature> Iterator<F> iterator(FeatureIterator<F> featureIterator) {
         return new BridgeIterator<F>(featureIterator);
@@ -1504,6 +1523,7 @@ public class DataUtilities {
     //
     // Conversion to java.util.Collection
     //
+
     /**
      * Used to quickly cast to a java.util.Collection.
      *
@@ -1523,6 +1543,7 @@ public class DataUtilities {
     //
     // Conversion to FeatureCollection
     //
+
     /**
      * Copies the provided features into a FeatureCollection.
      *
@@ -1623,6 +1644,7 @@ public class DataUtilities {
     //
     // Attribute Value Utility Methods
     //
+
     /**
      * Used to compare if two values are equal.
      *
@@ -1636,7 +1658,7 @@ public class DataUtilities {
      *   <li>Geometry.equals( Geometry ) - similar to {@link Geometry#equalsExact(Geometry)}
      * </ul>
      *
-     * @param att Attribute value
+     * @param att      Attribute value
      * @param otherAtt Other value
      * @return True if the values are equal
      */
@@ -1659,12 +1681,13 @@ public class DataUtilities {
     //
     // TypeConversion methods used by FeatureReaders
     //
+
     /**
      * Create a derived FeatureType
      *
      * @param featureType Original feature type to derive from.
-     * @param properties If null, every property of the featureType in input will be used
-     * @param override Intended CoordinateReferenceSystem, if null original will be used
+     * @param properties  If null, every property of the featureType in input will be used
+     * @param override    Intended CoordinateReferenceSystem, if null original will be used
      * @return derived FeatureType
      * @throws SchemaException
      */
@@ -1683,14 +1706,15 @@ public class DataUtilities {
         return createSubType(
                 featureType, properties, override, featureType.getTypeName(), namespaceURI);
     }
+
     /**
      * Create a derived FeatureType
      *
      * @param featureType Original feature type to derive from.
-     * @param properties If null, every property of the featureType in input will be used
-     * @param override Intended CoordinateReferenceSystem, if null original will be used
-     * @param typeName Type name override
-     * @param namespace Namespace override
+     * @param properties  If null, every property of the featureType in input will be used
+     * @param override    Intended CoordinateReferenceSystem, if null original will be used
+     * @param typeName    Type name override
+     * @param namespace   Namespace override
      * @return derived FeatureType
      * @throws SchemaException
      */
@@ -1724,11 +1748,11 @@ public class DataUtilities {
             same =
                     type.getLocalName().equals(properties[i])
                             && (((override != null) && type instanceof GeometryDescriptor)
-                                    ? assertEquals(
-                                            override,
-                                            ((GeometryDescriptor) type)
-                                                    .getCoordinateReferenceSystem())
-                                    : true);
+                            ? assertEquals(
+                            override,
+                            ((GeometryDescriptor) type)
+                                    .getCoordinateReferenceSystem())
+                            : true);
         }
 
         if (same) {
@@ -1824,6 +1848,7 @@ public class DataUtilities {
     //
     // Decoding (ie Parsing) support for PropertyAttributeReader and tutorials
     //
+
     /**
      * Utility method for FeatureType construction.
      *
@@ -1885,8 +1910,8 @@ public class DataUtilities {
      * <p>
      *
      * @param namespace Typename namespace used to qualify the provided name
-     * @param name Typename name, as qualified by namespace
-     * @param typeSpec Definition of attributes, for details see {@link #createType(String, String)}
+     * @param name      Typename name, as qualified by namespace
+     * @param typeSpec  Definition of attributes, for details see {@link #createType(String, String)}
      * @throws SchemaException
      */
     public static SimpleFeatureType createType(String namespace, String name, String typeSpec)
@@ -1919,6 +1944,7 @@ public class DataUtilities {
     //
     // Encoding support for PropertyFeatureWriter
     //
+
     /**
      * Encode the provided featureType as a String suitable for use with {@link #createType}.
      *
@@ -1954,14 +1980,15 @@ public class DataUtilities {
         buf.delete(buf.length() - 1, buf.length()); // remove last ","
         return buf.toString();
     }
+
     /**
      * Quickly review provided crs checking for an "EPSG:SRID" reference identifier.
      *
      * <p>
      *
-     * @see CRS#lookupEpsgCode(CoordinateReferenceSystem, boolean) for full search
      * @param crs
      * @return srid or -1 if not found
+     * @see CRS#lookupEpsgCode(CoordinateReferenceSystem, boolean) for full search
      */
     private static int toSRID(CoordinateReferenceSystem crs) {
         if (crs == null || crs.getIdentifiers() == null) {
@@ -1993,7 +2020,7 @@ public class DataUtilities {
      * SimpleFeature feature =
      *    DataUtilities.createFeature( featureType, "fid1=1|Jody Garnett\\nSteering Committee|POINT(1,2)" );
      * </pre>
-     *
+     * <p>
      * This format is used by the PropertyDataStore tutorials. It amounts to:
      *
      * <ul>
@@ -2047,7 +2074,7 @@ public class DataUtilities {
      * @param data Origional raw text as stored
      * @return data split using | as seperator
      * @throws DataSourceException if the information stored is inconsistent with the headered
-     *     provided
+     *                             provided
      */
     private static String[] splitIntoText(String data, SimpleFeatureType type) {
         // return data.split("|", -1); // use -1 as a limit to include empty trailing spaces
@@ -2092,6 +2119,7 @@ public class DataUtilities {
         }
         return text;
     }
+
     /**
      * Reads an attribute value out of the raw text supplied to {@link #createFeature}.
      *
@@ -2140,6 +2168,7 @@ public class DataUtilities {
         }
         return value;
     }
+
     /**
      * Produce a String encoding of SimpleFeature for use with {@link #createFeature}.
      *
@@ -2151,12 +2180,13 @@ public class DataUtilities {
     public static String encodeFeature(SimpleFeature feature) {
         return encodeFeature(feature, true);
     }
+
     /**
      * Produce a String encoding of SimpleFeature for use with {@link #createFeature}.
      *
      * <p>This method inlcudes the full featureId information.
      *
-     * @param feature feature to encode, only SimpleFeature is supported at this time
+     * @param feature    feature to encode, only SimpleFeature is supported at this time
      * @param includeFid true to include the optional feature id
      * @return text encoding for use with {@link #createFeature}
      */
@@ -2203,7 +2233,7 @@ public class DataUtilities {
      * feature.
      *
      * @param type FeatureType
-     * @param fid Feature ID for new feature
+     * @param fid  Feature ID for new feature
      * @param text Text representation of values
      * @return newly created feature
      * @throws IllegalAttributeException
@@ -2222,6 +2252,7 @@ public class DataUtilities {
     //
     // Internal utility methods to support PropertyDataStore feature encoding / decoding
     //
+
     /**
      * Used to decode common whitespace chracters and escaped | characters.
      *
@@ -2259,6 +2290,7 @@ public class DataUtilities {
 
         return txt;
     }
+
     /**
      * Internal method to access java binding using readable typename.
      *
@@ -2270,6 +2302,7 @@ public class DataUtilities {
         }
         return Class.forName(typeName);
     }
+
     /**
      * Internal method to access the readable typename for the provided class.
      *
@@ -2284,6 +2317,7 @@ public class DataUtilities {
     //
     // Query Support Methods for DataStore implementators
     //
+
     /**
      * Factory method to produce Comparator based on provided Query SortBy information.
      *
@@ -2363,7 +2397,7 @@ public class DataUtilities {
      *
      * @param firstQuery Query against this DataStore
      * @return Query restricted to the limits of definitionQuery
-     * @throws NullPointerException if some of the queries is null
+     * @throws NullPointerException     if some of the queries is null
      * @throws IllegalArgumentException if the type names of both queries do not match
      */
     public static Query mixQueries(Query firstQuery, Query secondQuery, String handle) {
@@ -2480,7 +2514,9 @@ public class DataUtilities {
         return newQuery;
     }
 
-    /** Transform provided filter; resolving property names */
+    /**
+     * Transform provided filter; resolving property names
+     */
     public static Filter resolvePropertyNames(Filter filter, SimpleFeatureType schema) {
         if (filter == null || filter == Filter.INCLUDE || filter == Filter.EXCLUDE) {
             return filter;
@@ -2496,7 +2532,7 @@ public class DataUtilities {
      *
      * @param atts1 the first list of attribute names, who's order will be maintained
      * @param atts2 the second list of attribute names, from wich the non repeated names will be
-     *     appended to the resulting list
+     *              appended to the resulting list
      * @return Set of attribute names from <code>atts1</code> and <code>atts2</code>
      */
     private static List<PropertyName> joinAttributes(
@@ -2526,7 +2562,7 @@ public class DataUtilities {
      * Returns a list of properties of a simple feature type, including all properties from a given
      * list, and all mandatory (minoccurs > 0) added.
      *
-     * @param type feature type
+     * @param type     feature type
      * @param oldProps given list of properties
      * @return list of properties including all mandatory properties
      * @throws IOException
@@ -2560,8 +2596,8 @@ public class DataUtilities {
      * #createType}</i>
      *
      * @param typeSpec
-     * @see #createType
      * @throws SchemaException If typeSpect could not be interpreted
+     * @see #createType
      */
     static AttributeDescriptor createAttribute(String typeSpec) throws SchemaException {
         int split = typeSpec.indexOf(":");
@@ -2670,6 +2706,7 @@ public class DataUtilities {
         }
         return count;
     }
+
     /**
      * Manually count the number of features in a feature collection using using {@link
      * FeatureCollection#features()}.
@@ -2697,6 +2734,7 @@ public class DataUtilities {
             }
         }
     }
+
     /**
      * Manually calculate the bounds from the provided FeatureIteator. This implementation is
      * intended for FeatureCollection implementors and test case verification. Client code should
@@ -2731,6 +2769,7 @@ public class DataUtilities {
             iterator.close();
         }
     }
+
     /**
      * Manually calculates the bounds of a feature collection using {@link
      * FeatureCollection#features()}.
@@ -2815,11 +2854,11 @@ public class DataUtilities {
     /**
      * Checks that a {@link File} is a real file, exists and is readable.
      *
-     * @param file the {@link File} instance to check. Must not be null.
+     * @param file   the {@link File} instance to check. Must not be null.
      * @param logger an optional {@link Logger} (can be null) where to log detailed info about the
-     *     file properties (path/readable/hidden/writable)
+     *               file properties (path/readable/hidden/writable)
      * @return {@code true} in case the file is a real file, exists and is readable; {@code false}
-     *     otherwise.
+     * otherwise.
      */
     public static boolean checkFileReadable(final File file, final Logger logger) {
         if (logger != null && logger.isLoggable(Level.FINE)) {
@@ -2854,7 +2893,7 @@ public class DataUtilities {
      * @param file the input file. Must not be null.
      * @return the re-formatted directory path.
      * @throws IllegalArgumentException in case the specified path doesn't rely on a
-     *     existing/readable directory.
+     *                                  existing/readable directory.
      */
     public static File checkDirectory(File file) throws IllegalArgumentException {
         String directoryPath = file.getPath();
@@ -2889,6 +2928,7 @@ public class DataUtilities {
     /**
      * Verifies a Map of parameters against the Param information. Primarily used by classes
      * implementing DataAcessFactory.
+     * 根据参数信息验证参数映射。主要用于实现DataAcessFactory的类。
      *
      * <p>It will ensure that:
      *
@@ -2897,13 +2937,19 @@ public class DataUtilities {
      *   <li>Everything is of the correct type (or upcovertable to the correct type without Error)
      *   <li>Required Parameters are present
      * </ul>
-     *
+     * <p> 它将确保：
+     * <ul>
+     *  <li>参数不为空
+     *  <li>所有内容都是正确的类型（或者可以无错误地升级到正确的类型）
+     *  <li>存在必需的参数
+     * </ul>
      * </code></pre>
      *
      * @param params
      * @param arrayParameters Array of parameters returned by DataAccessFactory.getParametersInfo()
+     *                        DataAccessFactory.getParametersInfo（）返回的参数数组
      * @return true if params is in agreement with getParametersInfo, override for additional
-     *     checks.
+     * checks. 如果params与getParametersInfo一致，则为true，将重写以进行其他检查。
      */
     public static boolean canProcess(Map params, Param[] arrayParameters) {
         if (params == null) {
@@ -2914,7 +2960,9 @@ public class DataUtilities {
             Object value;
             if (!params.containsKey(param.key)) {
                 if (param.required) {
-                    return false; // missing required key!
+                    // missing required key!
+                    // 缺少必需的密钥！
+                    return false;
                 } else {
                     continue;
                 }
@@ -2926,6 +2974,7 @@ public class DataUtilities {
                 // even if this parameter is not required
                 // we are going to refuse to process
                 // these params
+                //无法向上转换/分析到所需的类型！即使这个参数不是必需的，我们也会拒绝处理这些参数
                 return false;
             }
             if (value == null) {
@@ -2934,14 +2983,19 @@ public class DataUtilities {
                 }
             } else {
                 if (!param.type.isInstance(value)) {
-                    return false; // value was not of the required type
+                    // value was not of the required type
+                    //值不是必需的类型
+                    return false;
                 }
                 if (param.metadata != null) {
                     // check metadata
+                    //检查元数据
                     if (param.metadata.containsKey(Param.OPTIONS)) {
                         List<Object> options = (List<Object>) param.metadata.get(Param.OPTIONS);
                         if (options != null && !options.contains(value)) {
-                            return false; // invalid option
+                            // invalid option
+                            //无效选项
+                            return false;
                         }
                     }
                 }
@@ -2955,7 +3009,7 @@ public class DataUtilities {
      * the additional filter arguments.
      *
      * @param inputFilter the initial filter from which to exclude other ones.
-     * @param filters additional filters to be excluded
+     * @param filters     additional filters to be excluded
      * @return the updated {@link IOFileFilter}
      */
     public static FilenameFilter excludeFilters(
@@ -2980,7 +3034,7 @@ public class DataUtilities {
      * additional filter arguments.
      *
      * @param inputFilter the initial filter to which to add other ones.
-     * @param filters additional filters to be included in the main filter.
+     * @param filters     additional filters to be included in the main filter.
      * @return the updated {@link IOFileFilter}
      */
     public static FilenameFilter includeFilters(

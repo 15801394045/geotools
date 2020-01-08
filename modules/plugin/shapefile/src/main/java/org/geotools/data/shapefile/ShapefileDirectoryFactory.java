@@ -22,23 +22,32 @@ import java.util.Map;
 import org.geotools.util.URLs;
 
 /**
- * Creates a directory datastore pointing to a directory of shapefiles
+ * Creates a directory datastore pointing to a directory of shapefiles 创建指向shapefile目录的目录数据存储
  *
  * @author Andrea Aime main/java/org/geotools/data/dir/DirectoryDataStoreFactory.java $
  */
 public class ShapefileDirectoryFactory extends ShapefileDataStoreFactory {
-    /** The directory to be scanned for file data stores */
+    /** The directory to be scanned for file data stores 要扫描文件数据存储的目录 */
     public static final Param URLP =
             new Param("url", URL.class, "Directory containing geospatial files", true);
 
+    @Override
     public String getDisplayName() {
         return "Directory of spatial files (shapefiles)";
     }
 
+    @Override
     public String getDescription() {
         return "Takes a directory of shapefiles and exposes it as a data store";
     }
 
+    @Override
+    protected void setupParameters(Map<String, Param> parameters) {
+        super.setupParameters(parameters);
+        parameters.put(URLP.key, URLP);
+    }
+
+    @Override
     public boolean canProcess(Map params) {
         // we don't try to steal single shapefiles away from the main factory
         if (super.canProcess(params)) {
